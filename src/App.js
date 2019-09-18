@@ -1,6 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import PublicatorService from './Services/PublicatorService.js';
+import Input from './Components/Input.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -12,11 +14,27 @@ class App extends React.Component {
       emailPassword: '',
       wordpressUsername: '',
       wordpressPassword: '',
+      articles: [
+        // {content: 'Двама нелегални дървосекачи управляващи автомобили с чужди табели са задържани в ареста на РУ-Септември. Това е станало след сигнал на служители от Държавното горско стопанство в Пазарджик.  През уикенда в землището на септемврийското село Семчиново лесничеите патрулирали,   когато засекли два леки автомобила по пътя към параклиса „Свети Илия“. Виждайки горските стражари двамата водачи изоставили возилата и избягали. На мястото били повикани екипи от полицейското управление в Септември. Оказало се, че возилата „Лада“ и „Опел“ са оборудвани с чужди регистрационни табели. В багажниците им са открити около 1.5 кубически метра незаконно добита широколистна дървесина. Криминалистите от полицейското управление започнали работа по случая и не след дълго установили и задържали бегълците. Оказало се, че това са семчиновците К.А.-26г. и Г.Б.-18г. Спрямо тях е образувано досъдебно производство.'}
+      ]
     }
   }
 
   loadEmailData = () => {
-
+    var {articles, ...model} = this.state;
+    PublicatorService.GetNews(model)
+      .then(httpResponse => {
+        if(httpResponse.ok) {
+          console.log('success');
+          httpResponse.json().then(response => {
+            debugger;
+            this.setState({articles: response.articles});
+            console.log(response);
+          })
+        } else {
+          console.error("fail");
+        }
+      });
   }
 
   handleChange = (e) => {
@@ -40,6 +58,14 @@ class App extends React.Component {
     }
   }
 
+  renderArticles() {
+    return this.state.articles.map(article => {
+      return <div className="Article">
+        <p>{article.content}</p>
+      </div>
+    });
+  }
+
   render() {
     return (
       <div className="App">
@@ -48,56 +74,24 @@ class App extends React.Component {
         </header>
         <section>
           <div className="Form">
-            <div>
-              <input
-                name="emailSenderFilter"
-                type="text" value={this.state.emailSenderFilter}
-                placeholder="ivan@petrov.com"
-                onChange={this.handleChange} 
-              />
-            </div>
-            <div>
-              <input
-              name="emailUsername" 
-              type="text" 
-              value={this.state.emailUsername} 
-              placeholder="ivan@abv.bg" 
-              onChange={this.handleChange}
-            />
-            </div>
-            <div>
-              <input
-              name="emailPassword" 
-              type="text" 
-              value={this.state.emailPassword} 
-              placeholder="securePa$$" 
-              onChange={this.handleChange}
-            />
-            </div>
-            <div>
-              <input
-              name="wordpressUsername" 
-              type="text" 
-              value={this.state.wordpressUsername} 
-              placeholder="vankata" 
-              onChange={this.handleChange}
-            />
-            </div>
-            <div>
-              <input
-              name="wordpressPassword" 
-              type="text" 
-              value={this.state.wordpressPassword} 
-              placeholder="4notherSecurePa$$" 
-              onChange={this.handleChange}
-            />
-            </div>
+            <Input name="emailSenderFilter" title="Email Sender" value={this.state.emailSenderFilter} onChange={this.handleChange} />
+            <Input name="emailUsername" title="Email Username" value={this.state.emailUsername} onChange={this.handleChange}/>
+            <Input name="emailPassword" title="Email Password" value={this.state.emailPassword} onChange={this.handleChange} type="password"/>
+            <Input name="wordpressUsername" title="Wordpress Username" value={this.state.wordpressUsername} onChange={this.handleChange}/>
+            <Input name="wordpressPassword" title="Wordpress Password" value={this.state.wordpressPassword} onChange={this.handleChange} type="password"/>
             <div>
               <button onClick={this.saveCredentials}>Save Credentials</button>
+            </div>
+            <div>
               <button onClick={this.loadCredentials}>Load Credentials</button>
+            </div>
+            <div>
               <button onClick={this.loadEmailData}>Load Email Data</button>
             </div>
           </div>
+        </section>
+        <section className="Articles">
+          {this.renderArticles()}
         </section>
       </div>
     );

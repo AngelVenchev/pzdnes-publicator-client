@@ -30,3 +30,15 @@
 .Form {
   flex-direction: column;
 }
+
+.Articles {
+  display: flex;
+  flex-direction: columns;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.Article {
+  width: 90%
+}
