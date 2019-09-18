@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/pzdnes-publicator-client/precache-manifest.e39f039b9c745266755a1dffc5385a5a.js"
+  "/pzdnes-publicator-client/precache-manifest.1a6eb853d5c9b9c77ad1d2f00889876d.js"
 );
 
 self.addEventListener('message', (event) => {
