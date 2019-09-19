@@ -12,7 +12,7 @@ class App extends React.Component {
           <input
             id={this.props.name}
             name={this.props.name}
-            type="text" 
+            type={this.props.type || "text"}
             value={this.props.value}
             placeholder={this.props.placeholder}
             onChange={this.props.onChange} 
